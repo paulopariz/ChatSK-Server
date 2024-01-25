@@ -6,6 +6,12 @@ interface RoomUser {
   room: string;
 }
 
+interface Room {
+  name: string;
+  owner: string;
+  createAt: Date;
+}
+
 interface Message {
   room: string;
   text: string;
@@ -17,7 +23,54 @@ const users: RoomUser[] = [];
 
 const messages: Message[] = [];
 
+const rooms: any[] = [];
+
 io.on("connection", (socket) => {
+  function createRoom(room: Room): boolean {
+    const roomExists = rooms.some((room) => room.name === room);
+
+    console.log("roroomroomom", room);
+
+    room.createAt = new Date();
+    if (!roomExists) {
+      rooms.push(room);
+      console.log("rooms", rooms);
+
+      io.emit("room_list", getRoomList());
+      return true;
+    }
+
+    return false;
+  }
+
+  function getRoomList() {
+    return rooms.map((room) => room);
+  }
+
+  socket.on("create_room", (data, callback) => {
+    const roomCreated = createRoom(data);
+
+    if (roomCreated) {
+      socket.join(data);
+      callback({
+        success: true,
+
+        data: {
+          room: data.room,
+          owner: data.owner,
+          createdAt: new Date(),
+        },
+      });
+    } else {
+      callback({ success: false, message: `A sala ${data.room} já existe.` });
+    }
+  });
+
+  socket.on("list_rooms", (callback) => {
+    const roomList = getRoomList();
+    callback(roomList);
+  });
+
   socket.on("select_room", (data, callback) => {
     socket.join(data.room);
 
@@ -57,5 +110,6 @@ io.on("connection", (socket) => {
 
 function getMessagesRoom(room: string) {
   const messagesRoom = messages.filter((msg) => msg.room === room);
+
   return messagesRoom;
 }

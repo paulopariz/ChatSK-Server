@@ -29,12 +29,9 @@ io.on("connection", (socket) => {
   function createRoom(room: Room): boolean {
     const roomExists = rooms.some((room) => room.name === room);
 
-    console.log("roroomroomom", room);
-
     room.createAt = new Date();
     if (!roomExists) {
       rooms.push(room);
-      console.log("rooms", rooms);
 
       io.emit("room_list", getRoomList());
       return true;
@@ -54,13 +51,16 @@ io.on("connection", (socket) => {
       socket.join(data);
       callback({
         success: true,
-
         data: {
-          room: data.room,
+          name: data.name,
           owner: data.owner,
-          createdAt: new Date(),
+          maxUsers: data.maxUsers[0],
+          createAt: new Date(),
         },
       });
+
+      // Emita uma atualização para todos os clientes conectados
+      io.emit("room_list_update");
     } else {
       callback({ success: false, message: `A sala ${data.room} já existe.` });
     }
@@ -68,6 +68,8 @@ io.on("connection", (socket) => {
 
   socket.on("list_rooms", (callback) => {
     const roomList = getRoomList();
+    console.log("roomList", roomList);
+
     callback(roomList);
   });
 

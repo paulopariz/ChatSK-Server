@@ -54,12 +54,10 @@ io.on("connection", (socket) => {
         data: {
           name: data.name,
           owner: data.owner,
-          maxUsers: data.maxUsers[0],
           createAt: new Date(),
         },
       });
 
-      // Emita uma atualização para todos os clientes conectados
       io.emit("room_list_update");
     } else {
       callback({ success: false, message: `A sala ${data.room} já existe.` });
@@ -68,12 +66,14 @@ io.on("connection", (socket) => {
 
   socket.on("list_rooms", (callback) => {
     const roomList = getRoomList();
-    console.log("roomList", roomList);
 
     callback(roomList);
   });
 
   socket.on("select_room", (data, callback) => {
+    if (!data) {
+      return;
+    }
     socket.join(data.room);
 
     const userInRoom = users.find(

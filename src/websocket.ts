@@ -9,6 +9,7 @@ interface RoomUser {
 interface Room {
   name: string;
   owner: string;
+  img: string;
   createAt: Date;
 }
 
@@ -54,6 +55,7 @@ io.on("connection", (socket) => {
         data: {
           name: data.name,
           owner: data.owner,
+          img: data.img,
           createAt: new Date(),
         },
       });

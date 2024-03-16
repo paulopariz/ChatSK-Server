@@ -96,9 +96,8 @@ io.on("connection", (socket) => {
     callback(messagesRoom);
   });
 
-  const roomMessages: { [key: string]: Message[] } = {};
-
   socket.on("message", (data) => {
+    //salvar mensagens
     const message: Message = {
       room: data.room,
       username: data.username,
@@ -106,26 +105,15 @@ io.on("connection", (socket) => {
       createAt: new Date(),
     };
 
-    if (!roomMessages[data.room]) {
-      roomMessages[data.room] = [];
-    }
+    messages.push(message);
 
-    const existingMessageIndex = roomMessages[data.room].findIndex(
-      (msg) =>
-        msg.text === message.text &&
-        msg.createAt.getTime() === message.createAt.getTime()
-    );
-    if (existingMessageIndex === -1) {
-      roomMessages[data.room].push(message);
-      console.log("roomMessages", roomMessages);
-
-      // envia a mensagem apenas para os usuários da sala específica
-      io.to(data.room).emit("message", message);
-    }
+    //enviar mensagem para os usuario da sala
+    io.to(data.room).emit("message", message);
   });
-
-  // retorna as mensagens de uma sala específica
-  function getMessagesRoom(room: string) {
-    return roomMessages[room] || [];
-  }
 });
+
+function getMessagesRoom(room: string) {
+  const messagesRoom = messages.filter((msg) => msg.room === room);
+
+  return messagesRoom;
+}

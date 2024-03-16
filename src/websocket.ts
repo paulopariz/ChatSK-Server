@@ -96,10 +96,8 @@ io.on("connection", (socket) => {
     callback(messagesRoom);
   });
 
-  // Modificando a estrutura de dados para armazenar as mensagens por sala
   const roomMessages: { [key: string]: Message[] } = {};
 
-  // Ao receber uma mensagem, vamos salvar no objeto roomMessages correspondente à sala
   socket.on("message", (data) => {
     const message: Message = {
       room: data.room,
@@ -112,7 +110,6 @@ io.on("connection", (socket) => {
       roomMessages[data.room] = [];
     }
 
-    // Verificando se a mensagem já existe na sala, evitando duplicatas
     const existingMessageIndex = roomMessages[data.room].findIndex(
       (msg) =>
         msg.text === message.text &&
@@ -122,19 +119,13 @@ io.on("connection", (socket) => {
       roomMessages[data.room].push(message);
       console.log("roomMessages", roomMessages);
 
-      // Enviando mensagem apenas para os usuários da sala específica
+      // envia a mensagem apenas para os usuários da sala específica
       io.to(data.room).emit("message", message);
     }
   });
 
-  // Função para retornar as mensagens de uma sala específica
+  // retorna as mensagens de uma sala específica
   function getMessagesRoom(room: string) {
     return roomMessages[room] || [];
   }
 });
-
-function getMessagesRoom(room: string) {
-  const messagesRoom = messages.filter((msg) => msg.room === room);
-
-  return messagesRoom;
-}

@@ -25,9 +25,9 @@ https://github.com/paulopariz/ChatSK-Client/assets/111146928/c843972c-0191-40d7-
 
 ## 🔗 Links
 
-[![linkedin](https://img.shields.io/badge/Backend-0C101E?style=for-the-badge&logo=github&logoColor=white)](https://github.com/paulopariz/ChatSK-Client)
+[![linkedin](https://img.shields.io/badge/Frontend-0C101E?style=for-the-badge&logo=github&logoColor=white)](https://github.com/paulopariz/ChatSK-Client)
 
-[![linkedin](https://img.shields.io/badge/linkedin-0C101E?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/paulopariz/)
+[![linkedin](https://img.shields.io/badge/linkedin-0C101E?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/feed/update/urn:li:activity:7190081175925735424/)
 
 
 
